@@ -1,11 +1,19 @@
 import express from "express";
 import mysql from "mysql2";
 import dotenv from "dotenv";
+import cors from "cors";
 
 dotenv.config();
 
+
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+app.use(express.json());
+
+app.use(cors({
+    origin: "http://localhost:3000" // allow your React dev server
+}));
 
 const db = mysql.createPool({
     host: process.env.DB_HOST,
@@ -24,8 +32,20 @@ db.getConnection((err, connection) => {
     connection.release();
 });
 
-app.get("/", (req, res) => {
-    res.send("HIIIIIII");
+app.post("/addpassword", (req, res) => {
+    const {password, title} = req.body
+
+    db.query(
+        "INSERT INTO passwords (password, title) VALUES (?,?)", 
+        [password, title],
+        (err, result) => {
+            if (err) {
+                console.log(err)
+            } else {
+                res.send('Success')
+            }
+        }
+   );
 });
 
 app.listen(PORT, () => {
