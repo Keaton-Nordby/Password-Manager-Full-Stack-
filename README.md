@@ -15,4 +15,4 @@ Tech Stack
 - Backend: Node.js, Express.js
 
 Database: MySQL
-Encryption: bcrypt (or preferred encryption library)
+Encryption: crypto (or preferred encryption library ex: bcrypt)
