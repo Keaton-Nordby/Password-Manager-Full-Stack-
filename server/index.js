@@ -2,6 +2,7 @@ import express from "express";
 import mysql from "mysql2";
 import dotenv from "dotenv";
 import cors from "cors";
+import { encrypt, decrypt } from "./EncryptionHandler";
 
 dotenv.config();
 
@@ -32,6 +33,8 @@ db.getConnection((err, connection) => {
     connection.release();
 });
 
+
+
 app.post("/addpassword", (req, res) => {
     const {password, title} = req.body
 
@@ -47,6 +50,9 @@ app.post("/addpassword", (req, res) => {
         }
    );
 });
+
+
+
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
