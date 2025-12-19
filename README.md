@@ -22,7 +22,5 @@ How It Works
 1. User enters a password in the React frontend
 2. Password is sent to the backend via an API request
 3. Backend encrypts the password using AES encryption
-
-Encrypted password and IV are stored in MySQL
-
-When requested, the backend decrypts the password and sends it back to the frontend
+4. Encrypted password and IV are stored in MySQL
+5. When requested, the backend decrypts the password and sends it back to the frontend
