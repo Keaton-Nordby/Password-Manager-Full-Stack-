@@ -2,7 +2,7 @@ import express from "express";
 import mysql from "mysql2";
 import dotenv from "dotenv";
 import cors from "cors";
-import { encrypt, decrypt } from "./EncryptionHandler";
+import { encrypt, decrypt } from "./EncryptionHandler.js";
 
 dotenv.config();
 
@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 
 app.use(cors({
-    origin: "http://localhost:3000" // allow your React dev server
+    origin: "http://localhost:3000" 
 }));
 
 const db = mysql.createPool({
@@ -36,11 +36,11 @@ db.getConnection((err, connection) => {
 
 
 app.post("/addpassword", (req, res) => {
-    const {password, title} = req.body
-
+    const {password, title} = req.body;
+    const hashedPassword = encrypt(password);
     db.query(
-        "INSERT INTO passwords (password, title) VALUES (?,?)", 
-        [password, title],
+        "INSERT INTO passwords (password, title, iv) VALUES (?,?,?)", 
+        [hashedPassword.password, title, hashedPassword.iv],
         (err, result) => {
             if (err) {
                 console.log(err)
@@ -51,6 +51,20 @@ app.post("/addpassword", (req, res) => {
    );
 });
 
+app.get('/showpasswords', (req, res) => {
+   db.query('SELECT * FROM passwords;', 
+    (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.send(result);
+        }
+   })
+});
+
+app.post("/decryptpassword", (req, res) => {
+    res.send(decrypt(req.body));
+});
 
 
 
